@@ -26,26 +26,28 @@ To run the model, you'll need:
 
 To install the required libraries, run:
 
-```shell
 pip install keras tensorflow numpy pandas scikit-learn
-How to Use
-Clone the repository to your local machine.
 
-Ensure the requirements are installed in your Python environment.
-
-Place your CSV files in the Training Data directory.
-
-Run the main.py file in your Python environment.
-
-Follow the prompts to train or test the model:
-
-shell
+vbnet
 Copy code
-1. Train model
-2. Test model
-3. Save model
-4. Exit
+
+## How to Use
+
+1. Clone the repository to your local machine.
+2. Ensure the requirements are installed in your Python environment.
+3. Place your CSV files in the `Training Data` directory.
+4. Run the `main.py` file in your Python environment.
+5. Follow the prompts to train or test the model:
+
+    ```
+    1. Train model
+    2. Test model
+    3. Save model
+    4. Exit
+    ```
+
 Note: When training the model, an "AutoSave" model will be created after every training session.
 
-Disclaimer
+## Disclaimer
+
 This project is intended for educational and research purposes. It is not a tool for financial advice. Stock market investments carry risk and investors should only invest what they can afford to lose. Always consult with a professional financial advisor before making any investments.

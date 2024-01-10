@@ -7,7 +7,7 @@ This model is trained using Keras with a TensorFlow backend.
 ## Features
 
 - Uses LSTM, a type of Recurrent Neural Network (RNN), which is particularly good at processing sequential data.
-- The model ingests seven features: 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividends', 'Revenue'
+- The model ingests seven features: 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividends', 'Stock Splits'
 - The output is a percentage change in the closing price.
 - The model can be trained on any stock data provided in the correct CSV format.
 - Allows saving and loading of trained models for future use.

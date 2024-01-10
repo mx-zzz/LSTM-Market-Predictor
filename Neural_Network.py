@@ -42,7 +42,7 @@ def train_lstm_model(model, X_train, y_train, epochs):
 def load_and_preprocess_data(data_dir):
     X = []
     y = []
-    column_names = ['Open', 'High', 'Low', 'Close', 'Volume', 'Dividends', 'Revenue']
+    column_names = ['Open', 'High', 'Low', 'Close', 'Volume', 'Dividends', 'Stock Splits']
     for filename in os.listdir("Training Data"):
         try:
             data = pd.read_csv("Training Data\\" + filename)

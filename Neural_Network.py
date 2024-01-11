@@ -32,7 +32,7 @@ def create_lstm_model():
     model.add(LSTM(50, activation='tanh'))
     model.add(Dropout(0.2))
     model.add(Dense((2*CATEGORY_DEPTH)+1, activation='softmax'))
-    optimizer = Adam(learning_rate=0.001)
+    optimizer = Adam(learning_rate=0.01)
     model.compile(optimizer=optimizer, loss='categorical_crossentropy')
     return model
 
@@ -42,16 +42,22 @@ def train_lstm_model(model, X_train, y_train, epochs):
 def load_and_preprocess_data(data_dir):
     X = []
     y = []
-    column_names = ['Open', 'High', 'Low', 'Close', 'Volume', 'Dividends', 'Stock Splits']
-    for filename in os.listdir("Training Data"):
+    column_names = ['Open', 'High', 'Low', 'Close', 'Volume', 'Dividends', 'Revenue']
+
+    print(f"Getting csv Data from {data_dir}")
+
+    for filename in os.listdir("TrainingData"):
         try:
-            data = pd.read_csv("Training Data\\" + filename)
+            data = pd.read_csv("TrainingData\\" + filename)
+            print(f"Reading file {filename}")
         except ValueError as e:
             raise ValueError(f"Error processing file {filename}: {str(e)}")
         data = data[1:]
         for i in range(100, len(data)):
             X.append(data.iloc[i - 100:i, :7].values)
             y.append(((data.iloc[i, 3] - data.iloc[i - 1, 3]) / (data.iloc[i - 1, 3] + 0.00000000001 )) * 100)
+
+    print(f"Generating Data Slices")
 
     X = np.array(X)
     y = np.array(y)
@@ -62,10 +68,14 @@ def load_and_preprocess_data(data_dir):
     X, y = shuffle(X, y)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
 
+    print(f"Saving Data Slices")
+
     save_data_slices(X_train, "Debug Info\\X_train")
     save_data_slices(X_test, 'Debug Info\\X_test')
     save_data_slices(y_train, 'Debug Info\\y_train')
     save_data_slices(y_test, 'Debug Info\\y_test')
+
+    print(f"Data Slices Saved")
 
     return X_train, X_test, y_train, y_test
 
@@ -73,19 +83,18 @@ def evaluate_model(model, X_test, y_test, num_samples=140):
     shuffled_indices = np.random.permutation(len(X_test))
     selected_indices = shuffled_indices[:num_samples]
     predictions = model.predict(X_test[selected_indices])
-    expected_values = [np.sum(prediction*(j - CATEGORY_DEPTH)) for prediction in predictions]
     predicted_percentage_change = (np.argmax(predictions, axis=1) - CATEGORY_DEPTH)
     actual_percentage_change = (np.argmax(y_test[selected_indices], axis=1) - CATEGORY_DEPTH)
 
-    print_prediction_details(actual_percentage_change, predicted_percentage_change, expected_values)
+    print_prediction_details(actual_percentage_change, predicted_percentage_change)
     calculate_mean_squared_error(actual_percentage_change, predicted_percentage_change)
 
-def print_prediction_details(actual, predicted, expected_values):
-    print("    Predicted    Result       Error     E(X)")
+def print_prediction_details(actual, predicted):
+    print("    Predicted    Result       Error   ")
     print("---------------------------------------------------")
     for i in range(len(predicted)):
         error = np.abs(predicted[i] - actual[i])
-        print(f"{i + 1}\t{predicted[i]:.2f}%\t\t{actual[i]:.2f}%\t\t{error:.2f}%\t\t{expected_values[i]:.2f}")
+        print(f"{i + 1}\t{predicted[i]:.2f}%\t\t{actual[i]:.2f}%\t\t{error:.2f}%\t\t")
 
 def calculate_mean_squared_error(actual, predicted):
     error = np.abs(predicted - actual)
